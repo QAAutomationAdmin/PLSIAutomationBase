@@ -313,7 +313,7 @@ public class AG_AppRejectAcceptToFinalize_Test extends BaseClass {
 
                     appDetails.clickClose();
                     logger.log(Status.PASS, "Closed the popup");
-                     interpreterFound = true;
+                    interpreterFound = true;
                     break;
 
                 }
@@ -451,7 +451,7 @@ public class AG_AppRejectAcceptToFinalize_Test extends BaseClass {
             interpreterDb.clickAcceptedTab();
             logger.log(Status.PASS, "Clicked Interpreter>Accepted tab");
 
-            Thread.sleep(2000);
+            Thread.sleep(3000);
 
             interpreterDb.enterSearch(view_Text);
             logger.log(Status.PASS, "entered id " + view_Text + " in search box");
@@ -873,6 +873,7 @@ public class AG_AppRejectAcceptToFinalize_Test extends BaseClass {
             AG_NavigationPanelPage navPanel = new AG_NavigationPanelPage(driver);
             InterpreterDashboardPage interpreterDb = new InterpreterDashboardPage(driver);
             InterpreterPage interpreterPage = new InterpreterPage(driver);
+            DashBoardPage db = new DashBoardPage(driver);
 
             ExcelUtils exl = new ExcelUtils();
             XSSFWorkbook wb = exl.getWorkbook(BaseClass.getFilePathOfTestDataFile());
@@ -883,7 +884,7 @@ public class AG_AppRejectAcceptToFinalize_Test extends BaseClass {
             appointmentData.put("Requested Language", BaseClass.datasheet.get("Requested Language"));
             appointmentData.put("First Name", "Automation_AG");
             String lastNameOfPatient = nap.addScheduleAppointment(appointmentData);
-            DashBoardPage db = new DashBoardPage(driver);
+
             String patientFName = appointmentData.get("First Name");
             Thread.sleep(4000);
             WebElement appid = null;
@@ -897,10 +898,13 @@ public class AG_AppRejectAcceptToFinalize_Test extends BaseClass {
             Assert.assertNotNull(appid, "Appointment ID not returned properly");
             String view_Text = appid.getText();
             appid.click();
+            logger.addScreenCaptureFromPath(takeScreenshotForStep("Created and clicked appt id"));
 
             Thread.sleep(2000);
             appDetails.clickTabInterpreterMatching();
-            Thread.sleep(2000);
+
+            logger.log(Status.PASS, " Clicked INTERPRETER MATCHING Tab");
+
             appDetails.clickButtonFindInterpreters();
             Thread.sleep(2000);
 
@@ -931,8 +935,12 @@ public class AG_AppRejectAcceptToFinalize_Test extends BaseClass {
 
             }
 
-            appDetails.clickClose();
+            logger.addScreenCaptureFromPath(takeScreenshotForStep("Captured all interpreters"));
+
             Thread.sleep(1000);
+
+            appDetails.clickClose();
+            Thread.sleep(3000);
             loginPage.click_logOut();
             logger.log(Status.PASS, "logout as scheduler");
 
@@ -945,7 +953,7 @@ public class AG_AppRejectAcceptToFinalize_Test extends BaseClass {
 
                 if (db.newAppointmentIsDisplayed()) {
 
-                    Thread.sleep(1000);
+
                     logger.log(Status.PASS, "current page is all appointments dashboard");
                     navPanel.click_Interpreters();
                     Thread.sleep(1000);
@@ -954,6 +962,7 @@ public class AG_AppRejectAcceptToFinalize_Test extends BaseClass {
                     interpreterDb.enterSearch(interpreter);
                     Thread.sleep(2000);
                     logger.log(Status.PASS, "Entered the interpreter email " + interpreter + " in search");
+                    logger.addScreenCaptureFromPath(takeScreenshotForStep("Found interpreter"));
 
                     interpreterPage.clickFirstInterpreterViewInList();
                     logger.log(Status.PASS, "clicked the interpreter");
@@ -961,6 +970,7 @@ public class AG_AppRejectAcceptToFinalize_Test extends BaseClass {
                     Thread.sleep(2000);
                     interpreterDb.clickEditInterpreterButton();
                     logger.log(Status.PASS, "clicked the Edit Interpreter to see the status of checkbox");
+
 
                     Thread.sleep(2000);
 
@@ -970,6 +980,7 @@ public class AG_AppRejectAcceptToFinalize_Test extends BaseClass {
                     if (selfbookCheckboxValue.equalsIgnoreCase("true")) {
 
                         logger.log(Status.PASS, "ths check box is selected ie this interpreter can self book an appointment");
+                        logger.addScreenCaptureFromPath(takeScreenshotForStep("Checkbox is verified to be true"));
 
                         interpreterDb.clickCancel();
                         Thread.sleep(2000);
@@ -982,20 +993,19 @@ public class AG_AppRejectAcceptToFinalize_Test extends BaseClass {
 
                         interpreterDb.availableTabIsDisplayed();
                         logger.log(Status.PASS, "Available tab is displayed as self book appointment check box is checked.");
+                        Thread.sleep(1000);
                         interpreterDb.clickAvailableTab();
                         logger.log(Status.PASS, "Clicked Available tab");
+                        Thread.sleep(1000);
+                        interpreterDb.enterSearch(view_Text);
 
                         logger.log(Status.PASS, "entered id " + view_Text + " in search box");
-                        Thread.sleep(2000);
-                        interpreterDb.clickOfferedTab();
-                        Thread.sleep(2000);
-                        interpreterDb.clickAvailableTab();
-                        interpreterDb.enterSearch(view_Text);
-                        Thread.sleep(2000);
-                        WebElement viewid = interpreterDb.getFirstInterpreterDashboardAppointmentTableColView();
+                        logger.addScreenCaptureFromPath(takeScreenshotForStep("Appt available in Available Tab"));
 
-                        String id = viewid.getText();
-                        viewid.click();
+                        Thread.sleep(2000);
+
+
+                        interpreterDb.clickFirstInterpreterDashboardAppointmentTableColView();
 
                         logger.log(Status.PASS, "appointment id " + view_Text + " is displayed in AVAILABLE tab page");
 
@@ -1008,13 +1018,16 @@ public class AG_AppRejectAcceptToFinalize_Test extends BaseClass {
 
                         interpreterDb.clickAcceptButton();
 
+
                         logger.log(Status.PASS, "could click Accept Appointment");
 
-                        Thread.sleep(10000);
-
+                        Thread.sleep(3000);
+                        logger.addScreenCaptureFromPath(takeScreenshotForStep("Accepted appt"));
                         break;
 
                     } else if (selfbookCheckboxValue.equalsIgnoreCase("false")) {
+
+                        logger.addScreenCaptureFromPath(takeScreenshotForStep("Checkbox is not checked."));
 
                         interpreterDb.clickCancel();
                         Thread.sleep(2000);
@@ -1029,15 +1042,18 @@ public class AG_AppRejectAcceptToFinalize_Test extends BaseClass {
 
                         if (availableTab) {
                             logger.log(Status.FAIL, "Available tab is displayed even though the check box is unchecked");
+                            logger.addScreenCaptureFromPath(takeScreenshotForStep("Available tab is displayed."));
+                            Assert.fail("Available tab is displayed even though the check box is unchecked");
 
                         } else {
                             logger.log(Status.PASS, "Available tab is not displayed");
+                            logger.addScreenCaptureFromPath(takeScreenshotForStep("Available tab is not displayed."));
                         }
                     }
 
                 } else if (loginPage.invalidCredentialsErrorMsgIsDisplayed()){
 
-                   logger.log(Status.INFO,"considering another interpreter in list as password is unknown");
+                    logger.log(Status.INFO,"considering another interpreter in list as password is unknown");
 
                 }
 
