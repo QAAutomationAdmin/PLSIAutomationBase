@@ -17,9 +17,8 @@ public class AG_NavigationPanelPage {
         PageFactory.initElements(d,this);
 
     }
-//    @FindBy(xpath= "//a[@href='/interpreters/interpreters']")
-    @FindBy(xpath= "//div/*[text()='Interpreters']/..")
-    private WebElement interpreters;
+    @FindBy(xpath= "//a[@href='/interpreters']")
+    private WebElement Interpreters;
 
     @FindBy(xpath= "//a[@href='/interpreter/interpreter-home']")
     private WebElement Home_Interpreter;
@@ -31,7 +30,7 @@ public class AG_NavigationPanelPage {
 
     public void click_Interpreters() throws InterruptedException {
         Thread.sleep(3000);
-        boolean b = BaseClass.isElementPresent(interpreters);
+        boolean b = BaseClass.isElementPresent(Interpreters);
      //   BaseClass.goToElementVisibleArea(interpreters);
         WebElement el = new BaseClass().getElementByXpath(wd,"//div/*[text()='Interpreters']/../preceding-sibling::div");
         BaseClass.clickWithJavaScript(el);
