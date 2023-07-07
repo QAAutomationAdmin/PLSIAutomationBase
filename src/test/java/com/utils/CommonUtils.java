@@ -2,6 +2,10 @@ package com.utils;
 
 
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotInteractableException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,69 +14,68 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Properties;
-import java.util.Random;
+import java.util.*;
 
 public class CommonUtils {
-	
+	public static WebDriver driver;
+
 	public FileInputStream readFile(String filePath) {
-		File file =    new File(filePath);
+		File file = new File(filePath);
 		FileInputStream read = null;
 		try {
-			read =  new FileInputStream(file);
+			read = new FileInputStream(file);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			 new FileNotFoundException("File not found in >>> "+ filePath);
+			new FileNotFoundException("File not found in >>> " + filePath);
 		}
 		return read;
 	}
 
-	public  static int getRandomNumberOfRange(int n){
+	public static int getRandomNumberOfRange(int n) {
 
 		Random r = new Random();
 		r.nextInt(n);
-	  return 	r.nextInt();
+		return r.nextInt();
 
 	}
 
-	public   static  String getRandomStringOfLength(int n){
+	public static String getRandomStringOfLength(int n) {
 
 		String st = "abcdefghijklmnopqrstuvwxyz";
 
 		StringBuffer bf = new StringBuffer();
 
 
-		for(int i=0;i<n;i++){
+		for (int i = 0; i < n; i++) {
 
 			Random r = new Random();
-		 int charAt =	r.nextInt(25);
-		   bf.append(st.charAt(charAt));
+			int charAt = r.nextInt(25);
+			bf.append(st.charAt(charAt));
 		}
-		return  bf.toString();
+		return bf.toString();
 
 	}
-	public   static  String getRandomNumberOfLength(int n){
+
+	public static String getRandomNumberOfLength(int n) {
 
 		String st = "0123456789";
 
 		StringBuffer bf = new StringBuffer();
 
 
-		for(int i=0;i<n;i++){
+		for (int i = 0; i < n; i++) {
 
 			Random r = new Random();
-			int charAt =	r.nextInt(9);
+			int charAt = r.nextInt(9);
 			bf.append(st.charAt(charAt));
 		}
-		return  bf.toString();
+		return bf.toString();
 
 	}
 
-	public  static  String getActualHeaderStringFromDashBoardTable(DashBoardHeaders dbh){
+	public static String getActualHeaderStringFromDashBoardTable(DashBoardHeaders dbh) {
 
-        String actualHeader = "";
+		String actualHeader = "";
 		switch (dbh) {
 			case VIEW:
 				actualHeader = "VIEW";
@@ -92,7 +95,7 @@ public class CommonUtils {
 			case MRN_RN:
 				actualHeader = "MRN/RN";
 				break;
-			case  PATIENT_CONSUMER:
+			case PATIENT_CONSUMER:
 				actualHeader = "PATIENT/CONSUMER";
 				break;
 			case REQUESTED_LANGUAGE:
@@ -102,12 +105,12 @@ public class CommonUtils {
 				actualHeader = "STATUS";
 				break;
 			case INTERPRETER:
-				actualHeader ="INTERPRETER";
+				actualHeader = "INTERPRETER";
 				break;
-			case  CLIENT:
+			case CLIENT:
 				actualHeader = "CLIENT";
 				break;
-			case  FACILITY:
+			case FACILITY:
 				actualHeader = "FACILITY";
 				break;
 			case BUILDING:
@@ -116,76 +119,94 @@ public class CommonUtils {
 			case CLINIC_DEPARTMENT:
 				actualHeader = "CLINIC / DEPARTMENT";
 				break;
-			case  APPT_TYPE:
+			case APPT_TYPE:
 				actualHeader = "APPT TYPE";
 				break;
-			case  ACTIONS:
-				actualHeader  = "ACTIONS";
+			case ACTIONS:
+				actualHeader = "ACTIONS";
 				break;
 
 		}
 		return actualHeader;
 	}
 
-	public static String getCurrentSystemDate()
-	{
+	public static String getCurrentSystemDate() {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 		LocalDateTime now = LocalDateTime.now();
-		 return  dtf.format(now);
+		return dtf.format(now);
 	}
 
-	public static String getCurrentSystemDateyear()
-	{
+	public static String getCurrentSystemDateyear() {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDateTime now = LocalDateTime.now();
-		return  dtf.format(now);
+		return dtf.format(now);
 	}
-	public  static  String addMinutesToCurrentTime(int minToAdd){
+
+	public static String addMinutesToCurrentTime(int minToAdd) {
 
 		Calendar currentTimeNow = Calendar.getInstance();
 		currentTimeNow.add(Calendar.MINUTE, minToAdd);
 		SimpleDateFormat formatDate = new SimpleDateFormat("hh:mma");
-		return  formatDate.format(currentTimeNow.getTime()).toString();
+		return formatDate.format(currentTimeNow.getTime()).toString();
 
 	}
 
-	public static String readPropertiesFileValues(String filePath, String key){
+	public static String readPropertiesFileValues(String filePath, String key) {
 
-		String val ="";
+		String val = "";
 		try {
 			String fullPath = System.getProperty("user.dir") + "\\src\\main\\resources\\" + filePath;
 			FileInputStream fin = new FileInputStream(fullPath);
 			Properties prop = new Properties();
 			prop.load(fin);
 
-		val =	prop.get(key).toString();
+			val = prop.get(key).toString();
 
-		}catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return  val;
+		return val;
 
 	}
-	public static   void writeToPropertiesFile(String filePath, String key, String val){
+
+	public static void writeToPropertiesFile(String filePath, String key, String val) {
 
 		FileOutputStream outputStream = null;
-		try{
+		try {
 
 			String fullPath = System.getProperty("user.dir") + "\\src\\main\\resources\\" + filePath;
 			PropertiesConfiguration props = new PropertiesConfiguration(fullPath);
-			props.setProperty(key,val);
+			props.setProperty(key, val);
 			props.save();
-		}catch (Exception e){
-       e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
-	public   static  String getRandomEmailIdDomain(String domain){
+	public static String getRandomEmailIdDomain(String domain) {
 
-	String emaildId= getRandomStringOfLength(5);
-	  return  emaildId + "@" + domain;
+		String emaildId = getRandomStringOfLength(5);
+		return emaildId + "@" + domain;
 
 	}
 
+	public static List<WebElement> getListOfElements(List<WebElement> element) {
+		List<WebElement> list = element;
+		return list;
+	}
 
+	public WebElement getDropDownByText(WebElement element,List<WebElement> elements,String DDName) {
+		try {
+			List<WebElement> list = CommonUtils.getListOfElements(elements);
+			for (WebElement DDValues : list) {
+				if (DDValues.getText().equalsIgnoreCase(DDName)) {
+					element.click();
+				} else
+					throw new ElementNotInteractableException("Element Not Found");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return element;
+	}
 }
